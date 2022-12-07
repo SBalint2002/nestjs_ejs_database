@@ -6,7 +6,9 @@ import {
   Render,
   Post,
   Body,
+  Redirect,
 } from '@nestjs/common';
+import { resourceLimits } from 'worker_threads';
 import { brotliDecompressSync } from 'zlib';
 import { AppService } from './app.service';
 import db from './db';
@@ -36,13 +38,16 @@ export class AppController {
   }
 
   @Post('paintings/new')
+  @Redirect()
   async newPainting(@Body() painting: PaintingDto) {
     painting.on_display = painting.on_display == 1;
-    await db.execute(
+    const [result] : any = await db.execute(
       'INSERT INTO paintings (title, year, on_display) VALUES (?, ?, ?)',
-      [painting.title, painting.year, painting.on_display],
+      [painting.title, painting.year, painting.on_display]
     );
-    return 'OK';
+    return {
+      url: '/paintings/' + result.insertId,
+    };
   }
 
   @Get('paintings/:id')
