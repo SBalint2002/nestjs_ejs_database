@@ -20,6 +20,7 @@ export class AppController {
   }
 
   @Get('paintings/:id')
+  @Render('show')
   async showPainting(@Param('id') id: number) {
     const [rows] = await db.execute(
       'SELECT title, year, on_display FROM paintings WHERE id = ?',
