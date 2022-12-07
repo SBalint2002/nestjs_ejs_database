@@ -1,6 +1,16 @@
-import { Controller, Get, Param, Query, Render } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  Render,
+  Post,
+  Body,
+} from '@nestjs/common';
+import { brotliDecompressSync } from 'zlib';
 import { AppService } from './app.service';
 import db from './db';
+import { PaintingDto } from './painting.dto';
 
 @Controller()
 export class AppController {
@@ -17,6 +27,22 @@ export class AppController {
     return {
       paintings: rows,
     };
+  }
+
+  @Get('paintings/new')
+  @Render('form')
+  newPaintingForm() {
+    return {};
+  }
+
+  @Post('paintings/new')
+  async newPainting(@Body() painting: PaintingDto) {
+    painting.on_display = painting.on_display == 1;
+    await db.execute(
+      'INSERT INTO paintings (title, year, on_display) VALUES (?, ?, ?)',
+      [painting.title, painting.year, painting.on_display],
+    );
+    return 'OK';
   }
 
   @Get('paintings/:id')
