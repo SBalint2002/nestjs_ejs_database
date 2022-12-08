@@ -9,16 +9,16 @@
     <script src="main.js"></script>
   </head>
   <body>
-    <h1><%= painting.title %></h1>
-    <ul>
-      <p>Creation year: <%= painting.year %></p>
-      <p>
-        <% if (painting.on_display) { %>
-            On display
-        <% } else { %>
-            Not on display
-        <% } %>
-      </p>
-    </ul>
+    <form method="POST" action="/paintings/<%= painting.id %>/delete">
+      <h1><%= painting.title %></h1>
+      <ul>
+        <p>Creation year: <%= painting.year %></p>
+        <p>
+          <% if (painting.on_display) { %> On display <% } else { %> Not on
+          display <% } %>
+        </p>
+        <input type="submit" name="torles" value="Delete"/>
+      </ul>
+    </form>
   </body>
 </html>

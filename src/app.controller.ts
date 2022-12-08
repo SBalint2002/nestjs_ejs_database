@@ -54,9 +54,21 @@ export class AppController {
   @Render('show')
   async showPainting(@Param('id') id: number) {
     const [rows] = await db.execute(
-      'SELECT title, year, on_display FROM paintings WHERE id = ?',
+      'SELECT id,title, year, on_display FROM paintings WHERE id = ?',
       [id],
     );
     return { painting: rows[0] };
+  }
+
+  @Post('paintings/:id/delete')
+  @Redirect()
+  async removePainting(@Param('id') id: number) {
+    const [rows] = await db.execute(
+      'DELETE FROM paintings WHERE id = ?',
+      [id],
+    );
+    return {
+      url: '/'
+    };
   }
 }
